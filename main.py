@@ -126,8 +126,6 @@ def delete(ans):
     # return render_template('main.html', content=cur)
 
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)
 
