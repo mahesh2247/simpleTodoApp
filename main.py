@@ -3,9 +3,6 @@ from flask_restful import Api, Resource, fields, marshal_with, request
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 import datetime
-import math
-from datetime import date
-from functools import wraps
 
 
 app = Flask(__name__)
@@ -16,7 +13,6 @@ db = SQLAlchemy(app)
 
 
 class TodoApp(db.Model):
-    # id = db.Column(db.Integer, primary_key=True)
     todo = db.Column(db.String(200), primary_key=True)
     datecreate = db.Column(db.String, nullable=False)
     duedate = db.Column(db.String, nullable=False)
@@ -27,23 +23,11 @@ class TodoApp(db.Model):
 
 
 resource_fields = {
-    # 'id': fields.Integer,
     'todo': fields.String,
     'datecreate': fields.String,
     'duedate': fields.String,
     'remain': fields.String
 }
-
-#
-# def my_connect(function):
-#     global cur
-#     con = sqlite3.connect('mydatabase.db', check_same_thread=False)
-#     cur = con.cursor()
-#
-#     @wraps(function)
-#     def wrapper(*args, **kwargs):
-#         return function(*args, **kwargs)
-#     return wrapper
 
 
 def my_connect(func):
@@ -65,8 +49,6 @@ def my_connect(func):
 @my_connect
 @app.route('/')
 def mainpage():
-    # con = sqlite3.connect('mydatabase.db')
-    # cur = con.cursor()
     db.create_all()
     updatepage()
     return render_template('main.html', content=cur)
@@ -88,9 +70,6 @@ def updatepage():
     db.session.close()
 
 
-
-
-
 @marshal_with(resource_fields)
 @my_connect
 @app.route('/insert', methods=["POST"])
@@ -106,10 +85,7 @@ def insert():
         db.session.add(query)
         db.session.commit()
         db.session.close()
-        # con = sqlite3.connect('mydatabase.db')
-        # cur = con.cursor()
         return redirect(url_for('mainpage'))
-        # return render_template('main.html', content=cur)
 
 
 @marshal_with(resource_fields)
@@ -120,10 +96,7 @@ def delete(ans):
     db.session.delete(query)
     db.session.commit()
     db.session.close()
-    # con = sqlite3.connect('mydatabase.db')
-    # cur = con.cursor()
     return redirect(url_for('mainpage'))
-    # return render_template('main.html', content=cur)
 
 
 if __name__ == "__main__":
