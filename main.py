@@ -75,13 +75,20 @@ def mainpage():
 def updatepage():
     for row in cur.execute("SELECT todo, duedate from todo_app;"):
         newdue = datetime.datetime.strptime(row[1], '%Y-%m-%d %H:%M:%S') - datetime.datetime.now()
-        query = TodoApp.query.filter_by(todo=row[0]).first()
         newdue = str(newdue)
-        pos = newdue.find('.')
-        newdue = newdue[:pos]
-        query.remain = newdue
+        if newdue[0] == '-':
+            query = TodoApp.query.filter_by(todo=row[0]).first()
+            db.session.delete(query)
+        else:
+            query = TodoApp.query.filter_by(todo=row[0]).first()
+            pos = newdue.find('.')
+            newdue = newdue[:pos]
+            query.remain = newdue
     db.session.commit()
     db.session.close()
+
+
+
 
 
 @marshal_with(resource_fields)
