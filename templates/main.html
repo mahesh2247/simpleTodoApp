@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    html { font-size: 18px; }
+    body { padding: 0.2rem; max-width: 500px;
+    margin: auto;}
+    h2 { padding: 1rem; max-width: 500px;
+    margin: auto;}
+
+    .card {
+    background-color: dodgerblue;
+    color: white;
+    padding: 1rem;
+    height: 6rem;
+    }
+
+    .cards {
+    max-width: 2400px;
+    margin: 0 auto;
+    display: grid;
+    grid-gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    a:link{
+        color:white;
+    }
+    a:visited{
+        color:white;
+    }
+    a:hover{
+        color:red;
+        transform:scale(1.2);
+    }
+    a:focus{
+        color:white;
+    }
+    a:active{
+        color:white;
+    }
+    p {
+        font-size: 14px;
+        font-style: italic;
+    }
+    div.footer{
+        align-content: center;
+        text-align: center;
+    }
+    </style>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+</head>
+<h2>Your To-Do List</h2>
+<body>
+<form method="post" action="/insert">
+    <input type="text" name="todoinput" style="width: 400px;" required>
+    <br>
+    <br>
+    <input type="datetime-local" name="dateex" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}[0-9]{2}:[0-9]{2}" required>
+    <input type="submit" value="Add">
+    <br>
+</form>
+<br>
+<div class="cards">
+    {% for row in content.execute('SELECT * from todo_app;') %}
+        <a href="/delete/{{ row[0] }}" style="text-decoration:none;" >
+        <div class="card">
+            <b>{% print(row[0]) %}</b>  <p></br>Added-on : {% print(row[1]) %}  Due date: {% print(row[2]) %}  Time Left: {% print(row[3]) %}</p>
+        </div>
+        </a>
+    {% endfor %}
+</div>
+<br>
+<br>
+<div class="footer">
+{%- block footer %}
+<footer>&copy; Made by mahesh2247</a></footer>
+{%- endblock footer %}
+</div>
+</body>
+</html>
