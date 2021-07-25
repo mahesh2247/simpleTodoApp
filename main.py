@@ -90,7 +90,7 @@ def insert():
             db.session.close()
         return redirect(url_for('mainpage'))
     except:
-        flash(f'''Event already present. Wait for it to complete''', 'success')
+        flash(f'''Event already present. Wait for it to complete''', 'warning')
         return redirect(url_for('mainpage'))
 
 
@@ -102,6 +102,7 @@ def delete(ans):
     db.session.delete(query)
     db.session.commit()
     db.session.close()
+    flash(f'''Event {ans} was marked as completed by User''', 'danger')
     return redirect(url_for('mainpage'))
 
 
