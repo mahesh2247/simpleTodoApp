@@ -61,7 +61,7 @@ def updatepage():
         newdue = str(newdue)
         if newdue[0] == '-':
             query = TodoApp.query.filter_by(todo=row[0]).first()
-            flash(f'''A post was deleted since it met the deadline '{row[0]}' ''', 'success')
+            flash(f'''A post was automatically deleted since it met the deadline '{row[0]}' ''', 'success')
             db.session.delete(query)
         else:
             query = TodoApp.query.filter_by(todo=row[0]).first()
@@ -76,17 +76,21 @@ def updatepage():
 @my_connect
 @app.route('/insert', methods=["POST"])
 def insert():
-    if request.method == "POST":
-        todoinfo = request.form['todoinput']
-        datecreated = datetime.datetime.now().replace(microsecond=0)
-        duedate = request.form['dateex']
-        duedate = datetime.datetime.strptime(duedate, '%Y-%m-%dT%H:%M')
-        rem = str(duedate - datecreated)
-        db.create_all()
-        query = TodoApp(todo=todoinfo, datecreate=datecreated, duedate=duedate, remain=rem)
-        db.session.add(query)
-        db.session.commit()
-        db.session.close()
+    try:
+        if request.method == "POST":
+            todoinfo = request.form['todoinput']
+            datecreated = datetime.datetime.now().replace(microsecond=0)
+            duedate = request.form['dateex']
+            duedate = datetime.datetime.strptime(duedate, '%Y-%m-%dT%H:%M')
+            rem = str(duedate - datecreated)
+            db.create_all()
+            query = TodoApp(todo=todoinfo, datecreate=datecreated, duedate=duedate, remain=rem)
+            db.session.add(query)
+            db.session.commit()
+            db.session.close()
+        return redirect(url_for('mainpage'))
+    except:
+        flash(f'''Event already present. Wait for it to complete''', 'success')
         return redirect(url_for('mainpage'))
 
 
