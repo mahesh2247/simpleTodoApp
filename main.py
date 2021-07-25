@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_restful import Api, Resource, fields, marshal_with, request
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3
@@ -6,6 +6,7 @@ import datetime
 
 
 app = Flask(__name__)
+app.secret_key = "super secret key"
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
 app.config['SQL_TRACK_MODIFICATIONS'] = False
@@ -60,6 +61,7 @@ def updatepage():
         newdue = str(newdue)
         if newdue[0] == '-':
             query = TodoApp.query.filter_by(todo=row[0]).first()
+            flash(f'''A post was deleted since it met the deadline '{row[0]}' ''', 'success')
             db.session.delete(query)
         else:
             query = TodoApp.query.filter_by(todo=row[0]).first()

@@ -2,6 +2,12 @@
 <html lang="en">
 <meta http-equiv="refresh" content="60">
 <head>
+       <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
     html { font-size: 18px; }
     body { padding: 0.2rem; max-width: 500px;
@@ -9,11 +15,17 @@
     h2 { padding: 1rem; max-width: 500px;
     margin: auto;}
 
+    .flashes{
+
+        position: absolute;
+
+    }
+
     .card {
     background-color: dodgerblue;
     color: white;
     padding: 1rem;
-    height: 6rem;
+    height: 8rem;
     }
 
     .cards {
@@ -57,6 +69,17 @@
 </head>
 <h2>Your To-Do List</h2>
 <body>
+{% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endblock %}
 <form method="post" action="/insert">
     Add Event Description : <input type="text" name="todoinput" style="width: 400px;" required>
     <br>
